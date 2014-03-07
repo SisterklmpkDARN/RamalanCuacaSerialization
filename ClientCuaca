@@ -1,0 +1,53 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package sisster;
+
+/**
+ *
+ * @author hades
+ */
+import java.net.*;
+import java.io.*;
+
+public class ClientCuaca {
+    
+    
+     public static void main(String[] args) throws IOException {
+        
+      
+        System.out.println("onok server");
+        String hostName = "localhost";
+        int portNumber = 4444;
+
+        try {
+            PesanCuaca pesan;
+            Socket clientSocket = new Socket(hostName, portNumber);
+            System.out.println("tersambung");
+            ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());            
+         
+            out.writeObject(new PesanCuaca("semua"));
+            System.out.println("semua");
+            out.flush();
+          ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+
+            try {
+               
+                pesan = (PesanCuaca) in.readObject();
+                while(pesan.getString()!=null){
+                System.out.println("From server: " + pesan.getString() );    
+                }
+            } catch (ClassNotFoundException ex) {
+                System.out.println("ClassNotFound: " + ex.getMessage());
+            }
+            out.close();
+            in.close();
+            out.close();
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for the connection to " +
+                hostName);
+            System.exit(1);
+        }
+    }
+}
